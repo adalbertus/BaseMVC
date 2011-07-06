@@ -1,0 +1,4 @@
+﻿1) ZROBIONE: Logowanie zapytań nhibernate do pliku
+2) Wyświetlanie zapytań nhibernate na WWW
+3) Implementacja AutoMapper'a
+4) BDD + TDD

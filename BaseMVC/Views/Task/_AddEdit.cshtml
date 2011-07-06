@@ -1,0 +1,49 @@
+﻿@model BaseMVC.ViewModels.Task.TaskInput
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.OwnerId)
+
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>TaskInput</legend>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Title)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Title)
+            @Html.ValidationMessageFor(model => model.Title)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ProjectId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(x => x.ProjectId, Model.AvaiableProjects.Select(x => new SelectListItem
+       {
+           Selected = x.IsSelected,
+           Text = x.Value,
+           Value = x.Id.ToString(),
+       }))
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.StartTime)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.StartTime)
+            @Html.ValidationMessageFor(model => model.StartTime)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EndTime)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EndTime)
+            @Html.ValidationMessageFor(model => model.EndTime)
+        </div>
+        <p>
+            <input type="submit" value="@ViewBag.SubmitTitle" />
+        </p>
+    </fieldset>
+}

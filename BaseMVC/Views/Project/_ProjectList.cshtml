@@ -1,0 +1,84 @@
+﻿@model BaseMVC.ViewModels.DataPage<BaseMVC.ViewModels.ProjectItem>
+@*
+@using(Ajax.BeginForm("Search", new { pageNumber = 1 }, 
+        new AjaxOptions 
+        {
+            UpdateTargetId = "projectList",
+            InsertionMode  = System.Web.Mvc.Ajax.InsertionMode.Replace, 
+            HttpMethod     = "GET",
+        }))
+{
+    <input type="text" name="name" />
+    <input type="submit" value="Search the name" /> 
+}
+*@
+<table>
+    <tr>
+        <th>Action</th>
+        <th>
+            @Html.ActionLink("Name", "Search", new { pageNumber = 1, orderBy = "Name" })
+        </th>
+        <th>
+            @Html.ActionLink("Owner", "Search", new { pageNumber = 1, orderBy = "Owner" })
+        </th>
+        <th>
+            @Html.ActionLink("Start date", "Search", new { pageNumber = 1, orderBy = "StartDate" })
+        </th>
+        <th>
+            End date
+        </th>
+        <th>
+            Total tasks
+        </th>
+        <th>
+            Total tasks spent hours
+        </th>
+        <th>
+            Participants involved
+        </th>
+    </tr>
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>
+            @if (item.TotalTasksCount > 0)
+            {
+                @Html.ActionLink("Show tasks", "ShowForProject", new { controller = "Task", id = item.Id });
+            }
+            |
+            @Html.ActionLink("Add new task", "Add", new { controller = "Task", projectId = item.Id })
+            </td>
+            <td>
+                @Html.ActionLink(item.Name, "Details", new { id = item.Id })
+                (
+                @if (item.TotalTasksCount == 0)
+                {
+                    <text>no tasks defined</text>
+                }
+                else
+                {
+                    @Html.ActionLink("Show tasks", "ShowForProject", new { controller = "Task", id = item.Id });
+                }
+                )
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalTasksCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalTaskHours)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParticipantsCount)
+            </td>
+        </tr>
+    }
+</table>

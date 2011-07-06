@@ -1,0 +1,56 @@
+﻿@model BaseMVC.ViewModels.ProjectDetails
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>ProjectDetails</legend>
+
+    <div class="display-label">Name</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">Owner</div>
+    <div class="display-field">
+        @if (Model.Owner != null)
+        {
+            Html.DisplayFor(model => model.Owner.FullName);
+        }
+        else
+        {
+            <text>Brak</text>
+        }
+    </div>
+
+    <div class="display-label">StartDate</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.StartDate)
+    </div>
+
+    <div class="display-label">Task list</div>
+    <div class="display-field">
+        <ul>
+        @foreach (var task in Model.Tasks)
+        {
+            <li>@Html.ActionLink(task.Title, "Details", new { controller = "Tasks", Id = task.Id })</li>
+        }
+        </ul>
+    </div>
+
+    <div class="display-label">Participants list</div>
+    <div class="display-field">
+        <ul>
+        @foreach (var participant in Model.Participants)
+        {
+            <li>@Html.ActionLink(participant.FullName, "Details", new { controller = "User", Id = participant.Id })</li>
+        }
+        </ul>
+    </div>
+</fieldset>
+<p>    
+    @Html.ActionLink("Back to List", "Search")
+</p>

@@ -1,0 +1,13 @@
+﻿@model BaseMVC.ViewModels.Task.TaskInput
+
+@{
+    ViewBag.Title = "Edit";
+    ViewBag.SubmitTitle = "Update";
+}
+<h2>Edit</h2>
+
+@Html.Partial("_AddEdit")
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

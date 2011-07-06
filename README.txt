@@ -1,0 +1,1 @@
+I wanted to learn MVC3 with IoC, NHibernate, BDD - this project is to learn all this.
