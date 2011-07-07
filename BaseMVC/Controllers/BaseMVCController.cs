@@ -4,12 +4,20 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.Core.Logging;
+using NHibernate;
 
 namespace BaseMVC.Controllers
 {
     public class BaseMVCController : Controller
     {
         public ILogger Logger { get; set; }
+
+        public HttpSessionStateBase HttpSession
+        {
+            get { return base.Session; }
+        }
+
+        public new ISession Session { get; set; }
 
         public bool IsAjaxRequest { get; set; }
 
