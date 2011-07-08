@@ -87,6 +87,10 @@
       <Project>{1C4E22C6-0336-4C92-874A-35B0B80B4882}</Project>
       <Name>BaseMVC.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BaseMVC.Tests\BaseMVC.Tests.csproj">
+      <Project>{7ACE9363-854D-4F35-8CF9-18BC22152EDC}</Project>
+      <Name>BaseMVC.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BaseMVC.ViewModels\BaseMVC.ViewModels.csproj">
       <Project>{A9B4AE62-8789-4DAC-908E-C4C1C0896A21}</Project>
       <Name>BaseMVC.ViewModels</Name>
