@@ -14,7 +14,7 @@ namespace BaseMVC.Tests.Infrastructure
     {
         public static ISession OpenSession()
         {
-            var configuration = ConfigurationBuilder.Build(true);
+            var configuration = ConfigurationBuilder.Build(false, true);
             var sessionFactory = configuration.BuildSessionFactory();
             var session = sessionFactory.OpenSession();
             BuildSchema(configuration, session);
@@ -54,7 +54,7 @@ namespace BaseMVC.Tests.Infrastructure
         private static void BuildSchema(Configuration configuration, ISession session)
         {
             SchemaExport export = new SchemaExport(configuration);
-            export.Execute(true, true, false, session.Connection, null);
+            export.Execute(false, true, false, session.Connection, null);
         }
     }
 }

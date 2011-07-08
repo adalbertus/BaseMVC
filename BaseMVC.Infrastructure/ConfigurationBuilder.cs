@@ -15,13 +15,13 @@ namespace BaseMVC.Infrastructure
 {
     public class ConfigurationBuilder
     {
-        public static Configuration Build(bool inMemoryDatabase = false)
+        public static Configuration Build(bool isVerboseEnabled = false, bool inMemoryDatabase = false)
         {
             return Fluently.Configure()
                 .ProxyFactoryFactory(typeof(ProxyFactoryFactory))
-                .Database(SetupDatabase(inMemoryDatabase))
+                .Database(SetupDatabase(isVerboseEnabled, inMemoryDatabase))
                 .Mappings(m => m.AutoMappings.Add(CreateMappingModel()))
-                .ExposeConfiguration(c => ConfigurePersistence(c, inMemoryDatabase))
+                .ExposeConfiguration(c => ConfigurePersistence(c, isVerboseEnabled, inMemoryDatabase))
                 .BuildConfiguration();
         }
 
@@ -37,30 +37,39 @@ namespace BaseMVC.Infrastructure
             return m;
         }
 
-        private static IPersistenceConfigurer SetupDatabase(bool inMemoryDatabase = false)
+        private static IPersistenceConfigurer SetupDatabase(bool isVerboseEnabled, bool inMemoryDatabase)
         {
             if (inMemoryDatabase)
             {
-                var sqlite = SQLiteConfiguration.Standard.InMemory()
-                                    .ShowSql();
+                var sqlite = SQLiteConfiguration.Standard.InMemory();
+                if (isVerboseEnabled)
+                {
+                    sqlite.ShowSql();
+                }
                 return sqlite;
             }
+
             var mssql = MsSqlConfiguration.MsSql2008
                             .UseOuterJoin()
-                            .ConnectionString(x => x.FromConnectionStringWithKey("Default"))
-                            .ShowSql();
-
+                            .ConnectionString(x => x.FromConnectionStringWithKey("Default"));
+            if (isVerboseEnabled)
+            {
+                mssql.ShowSql();
+            }
             return mssql;
         }
 
-        private static void ConfigurePersistence(Configuration config, bool inMemoryDatabase = false)
+        private static void ConfigurePersistence(Configuration config, bool isVerboseEnabled, bool inMemoryDatabase)
         {
-            config.DataBaseIntegration(x =>
-                {
-                    x.LogFormatedSql  = true;
-                    x.LogSqlInConsole = true;
-                }
-                );
+            if (isVerboseEnabled)
+            {
+                config.DataBaseIntegration(x =>
+                    {
+                        x.LogFormatedSql  = true;
+                        x.LogSqlInConsole = true;
+                    }
+                    );
+            }
             if (!inMemoryDatabase)
             {
                 new SchemaUpdate(config).Execute(false, true);

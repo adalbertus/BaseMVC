@@ -14,30 +14,19 @@ using BaseMVC.ViewModels.Project;
 using Castle.Windsor;
 using System.Collections;
 using NHibernate;
+using BaseMVC.Tests.Controllers;
 
 namespace BaseMVC.Specs
 {
     [Binding]
-    public class CreateProjectSteps
+    public class CreateProjectSteps : ControllerTestBase
     {
         private ActionResult _newProjectPage;
-        private IProjectRepository _projectRepository;
-        private ProjectController _projectCtrl;
+        private ProjectController _projectController;
+        private ProjectInputViewModel _projectInputViewModel;
         public CreateProjectSteps()
         {
-            AutoMapperMock.Configure();
-
-            _projectRepository= MockRepository.GenerateStub<IProjectRepository>();
-            var users = new List<User>
-            {
-                new User { Id = 1, FirstName = "Jan", LastName = "Kowalski" },
-            };
-
-            var userPage = new DataPage<User>(users, 1, 1, 1);
-            //var userRepository = MockRepository.GenerateStub<IUserRepository>();
-            //userRepository.Stub(x => x.GetDataPage(1)).Return(userPage);
-
-            _projectCtrl = new ProjectController(MockRepository.GenerateStub<ISession>());
+            _projectController = new ProjectController(Session);
         }
 
         [Given(@"I am not Project Manager")]
@@ -67,18 +56,18 @@ namespace BaseMVC.Specs
         [Then(@"New Project page will be filled with default values")]
         public void ThenNewProjectPageWillBeFilledWithDefaultValues()
         {
-            var projectInput = ((_newProjectPage as ViewResult).Model as ProjectInputViewModel);
-            Assert.That(projectInput.StartDate, Is.LessThan(DateTime.Now));
-            Assert.That(projectInput.AvaiableOwners, Is.Not.Empty);
-            Assert.That(projectInput.AvaiableParticipants, Is.Not.Empty);
-            Assert.That(projectInput.EndDate, Is.Null);
-            Assert.That(projectInput.Name, Is.Null.Or.Empty);
+            _projectInputViewModel = ((_newProjectPage as ViewResult).Model as ProjectInputViewModel);
+            Assert.That(_projectInputViewModel.StartDate, Is.LessThan(DateTime.Now));
+            Assert.That(_projectInputViewModel.AvaiableOwners, Is.Not.Empty);
+            Assert.That(_projectInputViewModel.AvaiableParticipants, Is.Not.Empty);
+            Assert.That(_projectInputViewModel.EndDate, Is.Null);
+            Assert.That(_projectInputViewModel.Name, Is.Null.Or.Empty);
         }
 
         [Given(@"I filled New Project page as follows")]
         public void GivenIFilledNewProjectPageAsFollows(Table table)
         {
-            var projectInput = ((_newProjectPage as ViewResult).Model as ProjectInputViewModel);
+            _projectInputViewModel = ((_newProjectPage as ViewResult).Model as ProjectInputViewModel);
 
             Func<Table, string, string> findRowValue = (searchTable, fieldName) =>
             {
@@ -91,13 +80,13 @@ namespace BaseMVC.Specs
 
             if (!string.IsNullOrWhiteSpace(projectName))
             {
-                projectInput.Name = projectName;
+                _projectInputViewModel.Name = projectName;
             }
 
             DateTime dateTime;
             if (DateTime.TryParse(projectStartDate, out dateTime))
             {
-                projectInput.StartDate = dateTime;
+                _projectInputViewModel.StartDate = dateTime;
             }
 
         }
@@ -105,7 +94,7 @@ namespace BaseMVC.Specs
         [Given(@"I opened New Project page")]
         public void GivenIOpenedNewProjectPage()
         {
-            _newProjectPage = _projectCtrl.Add();
+            _newProjectPage = _projectController.Add();
         }
 
         [Then(@"I will be redirected to Project List page")]
@@ -119,13 +108,18 @@ namespace BaseMVC.Specs
         public void WhenIPressSaveButton()
         {
             var projectInput = ((_newProjectPage as ViewResult).Model as ProjectInputViewModel);
-            _newProjectPage = _projectCtrl.Add(projectInput);
+            _newProjectPage = _projectController.Add(projectInput);
         }
 
         [Then(@"project will be saved in database")]
         public void ThenProjectWillBeSavedInDatabase()
-        {            
-            _projectRepository.AssertWasCalled(x => x.Save(null), opt => opt.IgnoreArguments());
+        {
+            var projects = Session.QueryOver<Project>()
+                            .Where(x => x.Name == _projectInputViewModel.Name)
+                            .And(x => x.StartDate == _projectInputViewModel.StartDate)
+                            .List();
+
+            Assert.That(projects, Has.Count.EqualTo(1));
         }
     }
 }

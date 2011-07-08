@@ -13,7 +13,7 @@ namespace BaseMVC.IoC.Facilities
     {
         protected override void Init()
         {
-            var config = ConfigurationBuilder.Build();
+            var config = ConfigurationBuilder.Build(true);
 
             Kernel.Register(
                 Component.For<ISessionFactory>()
