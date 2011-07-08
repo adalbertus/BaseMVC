@@ -30,7 +30,7 @@ namespace BaseMVC.Controllers
         public ActionResult ShowForProject(int id)
         {
             var projects = _taskRepository.GetTasksForProject(id);
-            var taskList = projects.Map<TaskListItem[]>();
+            var taskList = projects.Map<TaskListItemViewModel[]>();
 
             return View(taskList);
         }
@@ -47,7 +47,7 @@ namespace BaseMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(TaskInput task)
+        public ActionResult Add(TaskInputViewModel task)
         {
             task = CreateUpdateTaskInput(task);
             if (ModelState.IsValid)
@@ -67,12 +67,12 @@ namespace BaseMVC.Controllers
         public ActionResult Edit(int id)
         {
             var taskModel = _taskRepository.Get(id);
-            var taskInput = taskModel.Map<TaskInput>();
+            var taskInput = taskModel.Map<TaskInputViewModel>();
             return View(taskInput);
         }
 
         [HttpPost]
-        public ActionResult Edit(TaskInput task)
+        public ActionResult Edit(TaskInputViewModel task)
         {            
             if (ModelState.IsValid)
             {
@@ -88,14 +88,14 @@ namespace BaseMVC.Controllers
         }
 
 
-        private TaskInput CreateUpdateTaskInput(TaskInput task = null)
+        private TaskInputViewModel CreateUpdateTaskInput(TaskInputViewModel task = null)
         {
             int userId = 1;
             var avaiableProjects = GetAvaiableProjectsForCurrentUser();
 
             if (task == null)
             {
-                task = new TaskInput
+                task = new TaskInputViewModel
                             {
                                 StartTime        = DateTime.Now,
                                 AvaiableProjects = avaiableProjects,

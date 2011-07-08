@@ -137,15 +137,15 @@ namespace BaseMVC.Infrastructure.Repositories
                 var projects = Session.QueryOver<Project>()
                         .Where(p => p.Id == projectId).Future();
 
-                TaskListItem taskListItem = null;
+                TaskListItemViewModel taskListItem = null;
                 var tasks = Session.QueryOver<Task>()
                         .Where(t => t.Project.Id == projectId)
                         .SelectList(l => l
                             .Select(t => t.Id).WithAlias(() => taskListItem.Id)
                             .Select(t => t.Title).WithAlias(() => taskListItem.Title)
                         )
-                        .TransformUsing(Transformers.AliasToBean<TaskListItem>())
-                        .Future<TaskListItem>();
+                        .TransformUsing(Transformers.AliasToBean<TaskListItemViewModel>())
+                        .Future<TaskListItemViewModel>();
 
                 User participantAlias = null;
                 UserItem participantListItem = null;

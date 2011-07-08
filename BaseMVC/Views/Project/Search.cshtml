@@ -1,4 +1,4 @@
-﻿@model BaseMVC.ViewModels.DataPage<BaseMVC.ViewModels.ProjectItem>
+﻿@model IEnumerable<BaseMVC.ViewModels.Project.ProjectListItemViewModel>
 
 @{
     ViewBag.Title = "Search";
@@ -12,9 +12,11 @@
     @Html.Partial("_ProjectList")
 </div>
 <div>
-@for (var pageNumber = 1; pageNumber < (@Model.TotalItemsCount / @Model.PageSize) + 1; pageNumber++)
+
+@*@for (var pageNumber = 1; pageNumber < (@Model.TotalItemsCount / @Model.PageSize) + 1; pageNumber++)
 {
     @Html.ActionLink(pageNumber.ToString(), "Search", new { pageNumber = pageNumber })
     <text>|</text>
 }
+*@
 </div>

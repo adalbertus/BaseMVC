@@ -7,7 +7,7 @@ using BaseMVC.ViewModels.Task;
 
 namespace BaseMVC.ViewModels.Project
 {
-    public class ProjectInput
+    public class ProjectInputViewModel
     {        
         public int Id { get; set; }
 
@@ -32,9 +32,9 @@ namespace BaseMVC.ViewModels.Project
         public int SelectedOwnerId { get; set; }
         public IEnumerable<ListItem> AvaiableOwners { get; set; }
 
-        public IEnumerable<TaskListItem> Tasks { get; set; }
+        public IEnumerable<TaskListItemViewModel> Tasks { get; set; }
 
-        public ProjectInput()
+        public ProjectInputViewModel()
         {
             StartDate = DateTime.Now;
             SelectedParticipants = new List<int>();

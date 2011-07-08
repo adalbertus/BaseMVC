@@ -3,58 +3,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using BaseMVC.Tests.Infrastructure;
+using NHibernate;
 using BaseMVC.Controllers;
-using Rhino.Mocks;
-using BaseMVC.Infrastructure.Repositories;
+using BaseMVC.ViewModels.Project;
+using BaseMVC.Tests.IoC;
+using NHibernate.Linq;
+using BaseMVC.Domain;
 using System.Web.Mvc;
-using BaseMVC.ViewModels;
 
 namespace BaseMVC.Tests.Controllers
 {
     [TestFixture]
-    public class ProjectControllerIndexAction
+    public class WhenProjectManagerInvokeAddingNewProjectFilledWithValidData : ControllerTestBase
     {        
-        private DataPage<ProjectItem> _model;
+        private ProjectInputViewModel _viewModel;
+        private ActionResult AddActionResult { get; set;}
 
         [TestFixtureSetUp]
         public void SetupContext()
         {
-            var projectRepository = MockRepository.GenerateMock<IProjectRepository>();
-            var userRepository = MockRepository.GenerateMock<IUserRepository>();
-
-            var items = new List<ProjectItem>
+            var projectController = new ProjectController(Session);
+            _viewModel = new ProjectInputViewModel
             {
-                new ProjectItem()
+                Name = "Sample project name",
+                StartDate = DateTime.Now,
             };
-            DataPage<ProjectItem> dataPage = new DataPage<ProjectItem>(items, 1, 1, 20);
-            projectRepository.Stub(p => p.GetPage(1, "Name", string.Empty)).Return(dataPage);
-            var projectController = new ProjectController(projectRepository, userRepository);
-            _model = (projectController.Search(null, string.Empty, string.Empty) as ViewResult).Model as DataPage<ProjectItem>;
+            AddActionResult = projectController.Add(_viewModel);
+        }
+        
+        [TestFixtureTearDown]
+        public void TearDownContext()
+        {
+            DatabaseFactory.Close(Session);
         }
 
         [Test]
-        public void ShouldReturnOneProjectInTheList()
+        public void ShouldNewProjectBeWrittenInDatabase()
         {
-            Assert.That(_model.Items.Count(), Is.EqualTo(1));
+            var projects = Session.QueryOver<Project>()
+                .Where(x => x.Name == _viewModel.Name)
+                .And(x => x.StartDate == _viewModel.StartDate)
+                .List();
+
+            Assert.That(projects, Has.Count.EqualTo(1));            
         }
 
         [Test]
-        public void ShouldReturnPageNumberEqualToOne()
+        public void ShouldBeRedirectedToProjectListPage()
         {
-            Assert.That(_model.PageNumber, Is.EqualTo(1));
+            var redirectResult = AddActionResult as RedirectToRouteResult;
+            Assert.That(redirectResult.RouteValues["action"], Is.EqualTo("Search"));
         }
-
-        [Test]
-        public void ShouldReturnPageSizeEqualTo20()
-        {
-            Assert.That(_model.PageSize, Is.EqualTo(20));
-        }
-
-        [Test]
-        public void ShouldReturnTotalItemsCountEqualToOne()
-        {
-            Assert.That(_model.TotalItemsCount, Is.EqualTo(1));
-        }
-
     }
 }

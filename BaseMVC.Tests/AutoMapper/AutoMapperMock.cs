@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AutoMapper;
 using BaseMVC.ViewModels.Task;
+using BaseMVC.ViewModels.Project;
+using AutoMapper;
 using BaseMVC.Domain;
 using BaseMVC.ViewModels;
-using BaseMVC.ViewModels.Project;
+using NHibernate;
 
-namespace BaseMVC.NBehave
+namespace BaseMVC.Tests.AutoMapper
 {
     public class AutoMapperMock
     {
@@ -27,7 +28,10 @@ namespace BaseMVC.NBehave
                 .ForMember(dst => dst.Tasks, opt => opt.Ignore());
 
             Mapper.CreateMap<Task, TaskListItemViewModel>();
-        }
+            Mapper.CreateMap<Project, ProjectListItemViewModel>();
 
+            Mapper.AssertConfigurationIsValid();
+        }
     }
+
 }

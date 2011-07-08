@@ -4,19 +4,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Castle.Core.Logging;
+using NHibernate;
 
 namespace BaseMVC.Controllers
 {
+    [Authorize]
     public class HomeController : BaseMVCController
     {
-        public HomeController(NHibernate.ISession session)
-        {
-
-        }
-
-        public ActionResult ShowId(int alaMaKota = 23)
-        {
-            return Content(alaMaKota.ToString());
+        public HomeController(ISession session)
+            : base(session)
+        {            
         }
 
         public ActionResult Index()

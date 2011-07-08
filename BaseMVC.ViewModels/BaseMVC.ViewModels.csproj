@@ -42,12 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataPage.cs" />
+    <Compile Include="IPagedList.cs" />
     <Compile Include="ListItem.cs" />
-    <Compile Include="ProjectContainer.cs" />
-    <Compile Include="ParticipantItem.cs" />
-    <Compile Include="Project\ProjectInput.cs" />
-    <Compile Include="Task\TaskInput.cs" />
-    <Compile Include="Task\TaskListItem.cs" />
+    <Compile Include="PagedList.cs" />
+    <Compile Include="Project\ProjectListItemViewModel.cs" />
+    <Compile Include="Project\ProjectInputViewModel.cs" />
+    <Compile Include="Task\TaskInputViewModel.cs" />
+    <Compile Include="Task\TaskListItemViewModel.cs" />
     <Compile Include="UserItem.cs" />
     <Compile Include="ProjectDetails.cs" />
     <Compile Include="ProjectItem.cs" />

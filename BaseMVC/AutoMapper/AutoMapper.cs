@@ -18,20 +18,20 @@ namespace BaseMVC.AutoMapper
             
             //Mapper.CreateMap<DateTime, DateTime>().ConvertUsing<UtcToLocalTimeConverter>();
             
-            Mapper.CreateMap<Task, TaskInput>()
+            Mapper.CreateMap<Task, TaskInputViewModel>()
                 .ForMember(m => m.AvaiableProjects, opt => opt.ResolveUsing<AvaiableProductsResolver>().FromMember(x => x.Owner.Id));
 
-            Mapper.CreateMap<TaskInput, Task>()
+            Mapper.CreateMap<TaskInputViewModel, Task>()
                 .ForMember(m => m.Owner, o => o.ResolveUsing<LoadingEntityResolver<User>>().FromMember(x => x.OwnerId))
                 .ForMember(m => m.Project, o => o.ResolveUsing<LoadingEntityResolver<Project>>().FromMember(x => x.ProjectId));
 
-            Mapper.CreateMap<ProjectInput, Project>()
+            Mapper.CreateMap<ProjectInputViewModel, Project>()
                 .ForMember(m => m.Owner, o => o.ResolveUsing<LoadingEntityResolver<User>>().FromMember(x => x.SelectedOwnerId))
                 .ForMember(dst => dst.Participants, opt => opt.ResolveUsing<LoadingCollectionEntityResolver<User>>().FromMember(x => x.SelectedParticipants))
-                .ForMember(dst => dst.Tasks, opt => opt.Ignore());
-                
+                .ForMember(dst => dst.Tasks, opt => opt.Ignore());                
               
-            Mapper.CreateMap<Task, TaskListItem>();            
+            Mapper.CreateMap<Task, TaskListItemViewModel>();
+            Mapper.CreateMap<Project, ProjectListItemViewModel>();
         }
 
         private static object ResolveType(IWindsorContainer container, Type type)

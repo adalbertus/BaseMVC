@@ -13,6 +13,7 @@ using BaseMVC.ViewModels;
 using BaseMVC.ViewModels.Project;
 using Castle.Windsor;
 using System.Collections;
+using NHibernate;
 
 namespace BaseMVC.Specs
 {
@@ -33,10 +34,10 @@ namespace BaseMVC.Specs
             };
 
             var userPage = new DataPage<User>(users, 1, 1, 1);
-            var userRepository = MockRepository.GenerateStub<IUserRepository>();
-            userRepository.Stub(x => x.GetDataPage(1)).Return(userPage);
+            //var userRepository = MockRepository.GenerateStub<IUserRepository>();
+            //userRepository.Stub(x => x.GetDataPage(1)).Return(userPage);
 
-            _projectCtrl = new ProjectController(_projectRepository, userRepository);
+            _projectCtrl = new ProjectController(MockRepository.GenerateStub<ISession>());
         }
 
         [Given(@"I am not Project Manager")]
@@ -66,7 +67,7 @@ namespace BaseMVC.Specs
         [Then(@"New Project page will be filled with default values")]
         public void ThenNewProjectPageWillBeFilledWithDefaultValues()
         {
-            var projectInput = ((_newProjectPage as ViewResult).Model as ProjectInput);
+            var projectInput = ((_newProjectPage as ViewResult).Model as ProjectInputViewModel);
             Assert.That(projectInput.StartDate, Is.LessThan(DateTime.Now));
             Assert.That(projectInput.AvaiableOwners, Is.Not.Empty);
             Assert.That(projectInput.AvaiableParticipants, Is.Not.Empty);
@@ -77,7 +78,7 @@ namespace BaseMVC.Specs
         [Given(@"I filled New Project page as follows")]
         public void GivenIFilledNewProjectPageAsFollows(Table table)
         {
-            var projectInput = ((_newProjectPage as ViewResult).Model as ProjectInput);
+            var projectInput = ((_newProjectPage as ViewResult).Model as ProjectInputViewModel);
 
             Func<Table, string, string> findRowValue = (searchTable, fieldName) =>
             {
@@ -117,7 +118,7 @@ namespace BaseMVC.Specs
         [When(@"I press Save button")]
         public void WhenIPressSaveButton()
         {
-            var projectInput = ((_newProjectPage as ViewResult).Model as ProjectInput);
+            var projectInput = ((_newProjectPage as ViewResult).Model as ProjectInputViewModel);
             _newProjectPage = _projectCtrl.Add(projectInput);
         }
 

@@ -7,7 +7,7 @@ using BaseMVC.ViewModels.Task;
 
 namespace BaseMVC.ViewModels
 {
-    [Obsolete("Refactor")]
+    [Obsolete("This DTO will be removed")]
     public class ProjectDetails
     {
         [Required]
@@ -25,7 +25,7 @@ namespace BaseMVC.ViewModels
         public IEnumerable<UserItem> Participants { get; set; }
 
         [Display(Name="Zadania")]
-        public IEnumerable<TaskListItem> Tasks { get; set; }
+        public IEnumerable<TaskListItemViewModel> Tasks { get; set; }
 
         [Required]
         [Display(Name="Właściciel")]

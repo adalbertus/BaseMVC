@@ -15,13 +15,13 @@ namespace BaseMVC.Infrastructure
 {
     public class ConfigurationBuilder
     {
-        public static Configuration Build()
+        public static Configuration Build(bool inMemoryDatabase = false)
         {
             return Fluently.Configure()
                 .ProxyFactoryFactory(typeof(ProxyFactoryFactory))
-                .Database(SetupDatabase)
+                .Database(SetupDatabase(inMemoryDatabase))
                 .Mappings(m => m.AutoMappings.Add(CreateMappingModel()))
-                .ExposeConfiguration(ConfigurePersistence)
+                .ExposeConfiguration(c => ConfigurePersistence(c, inMemoryDatabase))
                 .BuildConfiguration();
         }
 
@@ -37,16 +37,23 @@ namespace BaseMVC.Infrastructure
             return m;
         }
 
-        private static IPersistenceConfigurer SetupDatabase()
+        private static IPersistenceConfigurer SetupDatabase(bool inMemoryDatabase = false)
         {
+            if (inMemoryDatabase)
+            {
+                var sqlite = SQLiteConfiguration.Standard.InMemory()
+                                    .ShowSql();
+                return sqlite;
+            }
             var mssql = MsSqlConfiguration.MsSql2008
                             .UseOuterJoin()
                             .ConnectionString(x => x.FromConnectionStringWithKey("Default"))
                             .ShowSql();
+
             return mssql;
         }
 
-        private static void ConfigurePersistence(Configuration config)
+        private static void ConfigurePersistence(Configuration config, bool inMemoryDatabase = false)
         {
             config.DataBaseIntegration(x =>
                 {
@@ -54,8 +61,11 @@ namespace BaseMVC.Infrastructure
                     x.LogSqlInConsole = true;
                 }
                 );
-            new SchemaUpdate(config).Execute(false, true);
-            //SchemaMetadataUpdater.QuoteTableAndColumns(config);
+            if (!inMemoryDatabase)
+            {
+                new SchemaUpdate(config).Execute(false, true);
+                //SchemaMetadataUpdater.QuoteTableAndColumns(config);
+            }
         }
 
         private static bool IsDomainEntity(Type t)

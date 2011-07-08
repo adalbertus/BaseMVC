@@ -3,48 +3,82 @@ using System.Web.Mvc;
 using BaseMVC.AutoMapper;
 using BaseMVC.Domain;
 using BaseMVC.Infrastructure.Repositories;
+using BaseMVC.Infrastructure.Extensions;
 using BaseMVC.ViewModels;
 using BaseMVC.ViewModels.Project;
+using NHibernate.Linq;
+using System.Collections.Generic;
+using System;
+using NHibernate;
 
 namespace BaseMVC.Controllers
 {
     public class ProjectController : BaseMVCController
     {
-        private readonly IProjectRepository _projectRepository;
-        private readonly IUserRepository _userRepository;
-
-        public ProjectController(IProjectRepository projectRepository, IUserRepository userRepository)
+        public ProjectController(ISession session)
+            : base(session)
         {
-            _projectRepository = projectRepository;
-            _userRepository    = userRepository;
         }
 
+        //private readonly IProjectRepository _projectRepository;
+        //private readonly IUserRepository _userRepository;
+
+        //public ProjectController(IProjectRepository projectRepository, IUserRepository userRepository)
+        //{
+        //    _projectRepository = projectRepository;
+        //    _userRepository    = userRepository;
+        //}
+
+        [Authorize]
         [HttpGet]
         public ActionResult Search(int? pageNumber, string orderBy, string name)
         {
             // simulate slow repository connection
             //System.Threading.Thread.Sleep(2 * 1000);
-            var projectListPage = _projectRepository.GetPage(pageNumber.GetValueOrDefault(1), orderBy, name);
+
+            // single query version - but we cannot use AutoMapper functionality            
+            var projects = Session.Query<Project>()
+                .Where(x => x.Owner.LoginName == this.User.Identity.Name)
+                .Select(x => new ProjectListItemViewModel
+                {
+                    Id                = x.Id,
+                    Name              = x.Name,
+                    TasksCount        = x.Tasks.Count,
+                    ParticipantsCount = x.Participants.Count,
+                    StartDate         = x.StartDate,
+                    EndDate           = x.EndDate,
+                    OwnerFirstName    = x.Owner.FirstName,
+                    OwnerLastName     = x.Owner.LastName,
+                });
+
+            // AutoMapper version causes a lot of queries 1 + #Tasks + #Participants
+            //var projectsModel = Session.Query<Project>()
+            //    .Where(x => x.Owner.LoginName == this.User.Identity.Name)
+            //    .ToFuture();
+            //var projectsDisplay = projectsModel.Map<IEnumerable<ProjectListItemViewModel>>();
+
+            // Third solution is to use QueryOver with JoinAlias - but a lot of manual mapping
+            //var projectListPage = _projectRepository.GetPage(pageNumber.GetValueOrDefault(1), orderBy, name);
 
             if (IsAjaxRequest)
             {
-                return PartialView("_ProjectList", projectListPage);
+                return PartialView("_ProjectList", projects);
             }
             else
             {
-                return View(projectListPage);
+                return View(projects);
             }
         }
 
         [HttpGet]
         public ActionResult Details(int id)
         {
-            var projectDetails = _projectRepository.GetDetails(id);
-            if (projectDetails == null)
+            var project = Session.Get<Project>(id);
+            if (project == null)
             {
                 return HttpNotFound("Project not found");
             }
-            return View(projectDetails);
+            return View(project);
         }
         
         [HttpGet]
@@ -55,29 +89,51 @@ namespace BaseMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(ProjectInput newProject)
+        public ActionResult Add(ProjectInputViewModel newProject)
         {
             newProject = CreateUpdateProjectInput(newProject);
             
             if (ModelState.IsValid)
             {
-                var projectModel = newProject.Map<Project>();
-                _projectRepository.Save(projectModel);
+                using (var tx = Session.BeginTransaction())
+                {
+                    var projectModel = newProject.Map<Project>();
+                    Session.Save(projectModel);
+                    tx.Commit();
+                }
                 return RedirectToAction("Search");
             }
 
             return View(newProject);
         }
 
-        private ProjectInput CreateUpdateProjectInput(ProjectInput newProject = null)
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public ActionResult Edit(ProjectInputViewModel projectInput)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        private ProjectInputViewModel CreateUpdateProjectInput(ProjectInputViewModel newProject = null)
         {
             if (newProject == null)
             {
-                newProject = new ProjectInput();
+                newProject = new ProjectInputViewModel();
             }
 
-            var avaiableOwners              = _userRepository.GetDataPage(1).Items;
-            var avaiableParticipants        = _userRepository.GetDataPage(1).Items;
+            var avaiableOwners = Session.Query<User>().ToList();
+            var avaiableParticipants = Session.Query<User>().ToList();
 
             newProject.AvaiableOwners = avaiableOwners.Select(x => new ListItem
             {

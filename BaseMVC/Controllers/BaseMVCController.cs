@@ -17,9 +17,14 @@ namespace BaseMVC.Controllers
             get { return base.Session; }
         }
 
-        public new ISession Session { get; set; }
+        public new ISession Session { get; private set; }
 
         public bool IsAjaxRequest { get; set; }
+
+        public BaseMVCController(ISession session)
+        {
+            Session = session;
+        }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {

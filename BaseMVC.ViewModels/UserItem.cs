@@ -5,6 +5,7 @@ using System.Web;
 
 namespace BaseMVC.ViewModels
 {
+    [Obsolete("This DTO will be removed")]
     public class UserItem
     {
         public int Id { get; set; }
