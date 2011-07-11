@@ -40,7 +40,7 @@ namespace BaseMVC.MSpecTests.Controllers
     }
 
     [Subject("As ProjectManager")]
-    public class when_invoking_add_method_with_invalid_input_form : ControllerSpecsBase<ProjectController>
+    public class when_invoking_add_method_with_invalid_model_state : ControllerSpecsBase<ProjectController>
     {
         private static ProjectInputViewModel viewModel;
         private static ActionResult viewResult;
@@ -83,5 +83,31 @@ namespace BaseMVC.MSpecTests.Controllers
         It should_return_model_with_StartDate_equal_to_current_date =() => (viewResult.Model as ProjectInputViewModel).StartDate.ToString("yyyyMMdd").ShouldEqual(currentDate);
         It should_return_model_with_not_empty_AvaiableOwners_list =() => (viewResult.Model as ProjectInputViewModel).AvaiableOwners.ShouldNotBeEmpty();
         It should_return_model_with_not_empty_AvaiableParticipants_list =() => (viewResult.Model as ProjectInputViewModel).AvaiableParticipants.ShouldNotBeEmpty();
+    }
+
+    [Subject("As ProjectManager")]
+    public class when_invoking_details_for_existing_project : ControllerSpecsBase<ProjectController>
+    {
+        private static ViewResult viewResult;
+        private static DateTime startDate = DateTime.Now;
+        private static User user;
+        private static Project project;
+
+        Establish context =() =>
+        {
+            user = new User 
+                    {
+                        FirstName = "FirstName",
+                        LoginName = "LoginName",
+                    };
+            project = Project.CreateProject("Sample project", startDate, null, user, new[] { user });
+            session.Save(project);
+            session.Flush();
+        };
+
+        Because controller_invoke_add_method =() => viewResult = controller.Details(project.Id) as ViewResult;
+
+        It should_return_non_empty_model =() => viewResult.Model.ShouldNotBeNull();
+        It should_return_model_with_ProjectName_equal_to_Sample_project = () => (viewResult.Model as ProjectViewModel).Name.ShouldEqual("Sample project");
     }
 }

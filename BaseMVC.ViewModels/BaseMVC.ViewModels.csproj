@@ -47,6 +47,7 @@
     <Compile Include="PagedList.cs" />
     <Compile Include="Project\ProjectListItemViewModel.cs" />
     <Compile Include="Project\ProjectInputViewModel.cs" />
+    <Compile Include="Project\ProjectViewModel.cs" />
     <Compile Include="Task\TaskInputViewModel.cs" />
     <Compile Include="Task\TaskListItemViewModel.cs" />
     <Compile Include="UserItem.cs" />

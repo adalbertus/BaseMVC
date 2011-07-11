@@ -1,4 +1,4 @@
-﻿@model BaseMVC.Domain.Project
+﻿@model BaseMVC.ViewModels.Project.ProjectViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -16,9 +16,9 @@
 
     <div class="display-label">Owner</div>
     <div class="display-field">
-        @if (Model.Owner != null)
+        @if (!string.IsNullOrEmpty(Model.OwnerFullName))
         {
-            Html.DisplayFor(model => model.Owner.FullName);
+            Html.DisplayFor(model => model.OwnerFullName);
         }
         else
         {
@@ -44,9 +44,9 @@
     <div class="display-label">Participants list</div>
     <div class="display-field">
         <ul>
-        @foreach (var participant in Model.Participants)
+        @foreach (var participant in Model.ParticipantsFullNames)
         {
-            <li>@Html.ActionLink(participant.FullName, "Details", new { controller = "User", Id = participant.Id })</li>
+            <li>@participant</li>
         }
         </ul>
     </div>

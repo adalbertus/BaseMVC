@@ -73,12 +73,13 @@ namespace BaseMVC.Controllers
         [HttpGet]
         public ActionResult Details(int id)
         {
-            var project = Session.Get<Project>(id);
-            if (project == null)
+            var projectModel = Session.Get<Project>(id);
+            if (projectModel == null)
             {
                 return HttpNotFound("Project not found");
             }
-            return View(project);
+            var projectViewModel = projectModel.Map<ProjectViewModel>();
+            return View(projectViewModel);
         }
         
         [HttpGet]
