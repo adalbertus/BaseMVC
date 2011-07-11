@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseMVC.Specs", "BaseMVC.Sp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseMVC.NBehave", "BaseMVC.NBehave\BaseMVC.NBehave.csproj", "{7B8FB4A2-6C1A-4BAF-861F-33C5A73145DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseMVC.MSpecTests", "BaseMVC.MSpecTests\BaseMVC.MSpecTests.csproj", "{AE9C9779-1849-4ED3-93FB-B50565C13850}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,16 @@ Global
 		{7B8FB4A2-6C1A-4BAF-861F-33C5A73145DD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7B8FB4A2-6C1A-4BAF-861F-33C5A73145DD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7B8FB4A2-6C1A-4BAF-861F-33C5A73145DD}.Release|x86.ActiveCfg = Release|Any CPU
+		{AE9C9779-1849-4ED3-93FB-B50565C13850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE9C9779-1849-4ED3-93FB-B50565C13850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE9C9779-1849-4ED3-93FB-B50565C13850}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{AE9C9779-1849-4ED3-93FB-B50565C13850}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{AE9C9779-1849-4ED3-93FB-B50565C13850}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AE9C9779-1849-4ED3-93FB-B50565C13850}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE9C9779-1849-4ED3-93FB-B50565C13850}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE9C9779-1849-4ED3-93FB-B50565C13850}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AE9C9779-1849-4ED3-93FB-B50565C13850}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{AE9C9779-1849-4ED3-93FB-B50565C13850}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
