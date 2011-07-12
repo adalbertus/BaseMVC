@@ -31,7 +31,7 @@ namespace BaseMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult Search(int? pageNumber, string orderBy, string name)
+        public ActionResult Index()
         {
             // simulate slow repository connection
             //System.Threading.Thread.Sleep(2 * 1000);
@@ -102,7 +102,7 @@ namespace BaseMVC.Controllers
                     Session.Save(projectModel);
                     tx.Commit();
                 }
-                return RedirectToAction("Search");
+                return RedirectToAction("Index");
             }
 
             return View(newProject);

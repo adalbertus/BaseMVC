@@ -53,7 +53,7 @@ namespace BaseMVC.Tests.Controllers
         public void ShouldBeRedirectedToProjectListPage()
         {
             var redirectResult = AddActionResult as RedirectToRouteResult;
-            Assert.That(redirectResult.RouteValues["action"], Is.EqualTo("Search"));
+            Assert.That(redirectResult.RouteValues["action"], Is.EqualTo("Index"));
         }
     }
 }

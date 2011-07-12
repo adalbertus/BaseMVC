@@ -223,7 +223,7 @@
     <Content Include="Views\Project\_ProjectList.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Project\Search.cshtml" />
+    <Content Include="Views\Project\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NLog.config" />

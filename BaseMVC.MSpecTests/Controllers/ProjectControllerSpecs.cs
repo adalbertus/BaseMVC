@@ -36,7 +36,7 @@ namespace BaseMVC.MSpecTests.Controllers
             .And(x => x.StartDate == viewModel.StartDate)
             .SingleOrDefault()
             .ShouldNotBeNull();
-        It should_redirect_to_action_Search =() => (actionResult as RedirectToRouteResult).RouteValues["action"].ShouldBeTheSameAs("Search");
+        It should_redirect_to_action_Search =() => (actionResult as RedirectToRouteResult).RouteValues["action"].ShouldBeTheSameAs("Index");
     }
 
     [Subject("As ProjectManager")]
@@ -117,4 +117,21 @@ namespace BaseMVC.MSpecTests.Controllers
         It should_return_model_with_one_participant = () => ProjectViewModel.Participants.Count().ShouldEqual(1);
         It should_return_model_with_participant_FullName_equal_to_FirstName_LastName = () => ProjectViewModel.Participants.ShouldContain(x => x.FullName == "FirstName LastName");
     }
+
+    [Subject("As ProjectManager")]
+    public class when_invoking_details_for_non_existing_project : ControllerSpecsBase<ProjectController>
+    {
+        private static ActionResult actionResult;
+
+        Establish context =() =>
+        {
+        };
+
+        Because controller_invoke_add_method =() => actionResult = controller.Details(1);
+
+        It should_return_page_not_found_result =() => actionResult.ShouldBeOfType<HttpNotFoundResult>();
+        It should_return_page_not_found_with_status_description_Project_not_found =() => (actionResult as HttpNotFoundResult).StatusDescription.ShouldEqual("Project not found");
+
+    }
+
 }

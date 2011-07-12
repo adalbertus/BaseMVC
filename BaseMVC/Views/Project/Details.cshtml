@@ -1,13 +1,13 @@
 ﻿@model BaseMVC.ViewModels.Project.ProjectViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Project details: " + Model.Name;
 }
 
-<h2>Details</h2>
+<h2>Project details: @Model.Name</h2>
 
 <fieldset>
-    <legend>ProjectDetails</legend>
+    <legend>@Model.Name</legend>
 
     <div class="display-label">Name</div>
     <div class="display-field">
@@ -18,7 +18,7 @@
     <div class="display-field">
         @if (!string.IsNullOrEmpty(Model.OwnerFullName))
         {
-            Html.DisplayFor(model => model.OwnerFullName);
+            @Html.ActionLink(Model.OwnerFullName, "Summary", new { controller = "User", id = Model.OwnerId });
         }
         else
         {
@@ -44,13 +44,13 @@
     <div class="display-label">Participants list</div>
     <div class="display-field">
         <ul>
-        @foreach (var participant in Model.ParticipantsFullNames)
+        @foreach (var participant in Model.Participants)
         {
-            <li>@participant</li>
+            <li>@Html.ActionLink(participant.FullName, "Summary", new { controller = "User", id = participant.Id })</li>
         }
         </ul>
     </div>
 </fieldset>
 <p>    
-    @Html.ActionLink("Back to List", "Search")
+    @Html.ActionLink("Back to List", "Index")
 </p>
