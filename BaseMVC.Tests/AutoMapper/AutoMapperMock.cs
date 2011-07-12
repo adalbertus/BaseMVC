@@ -29,6 +29,7 @@ namespace BaseMVC.Tests.AutoMapper
 
             Mapper.CreateMap<Task, TaskListItemViewModel>();
             Mapper.CreateMap<Project, ProjectListItemViewModel>();
+            Mapper.CreateMap<Project, ProjectViewModel>();
 
             Mapper.AssertConfigurationIsValid();
         }

@@ -18,5 +18,24 @@ namespace BaseMVC.Domain
         {
             AssignedProjects = new List<Project>();
         }
+
+        public virtual string GetFullName()
+        {
+            StringBuilder fullName = new StringBuilder();
+            if (!string.IsNullOrWhiteSpace(FirstName))
+            {
+                fullName.Append(FirstName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(LastName))
+            {
+                if (fullName.Length > 0)
+                {
+                    fullName.Append(" ");
+                }
+                fullName.Append(LastName);
+            }
+            return fullName.ToString();
+        }
     }
 }
