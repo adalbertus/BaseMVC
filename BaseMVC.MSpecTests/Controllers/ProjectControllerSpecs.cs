@@ -88,34 +88,19 @@ namespace BaseMVC.MSpecTests.Controllers
     [Subject("As ProjectManager")]
     public class when_invoking_details_for_existing_project : ControllerSpecsBase<ProjectController>
     {
-        private static ViewResult viewResult;
-        private static ProjectViewModel ProjectViewModel { get { return viewResult.Model as ProjectViewModel; } }
-        private static DateTime startDate = DateTime.Now;
-        private static User user;
-        private static Project project;
+        protected static ViewResult viewResult;
+        protected static User johnSmith;
+        protected static Project sampleProject;
 
         Establish context =() =>
         {
-            user = new User 
-                    {
-                        FirstName = "FirstName",
-                        LastName = "LastName",
-                        LoginName = "LoginName",
-                    };
-            project = Project.CreateProject("Sample project", startDate, null, user, new[] { user });
-            session.Save(project);
-            session.Flush();
+            johnSmith    = databaseCreator.JohnSmith;
+            sampleProject = databaseCreator.SampleProject;
         };
 
-        Because controller_invoke_add_method =() => viewResult = controller.Details(project.Id) as ViewResult;
+        Because controller_invoke_add_method =() => viewResult = controller.Details(sampleProject.Id) as ViewResult;
 
-        It should_return_non_empty_model =() => viewResult.Model.ShouldNotBeNull();
-        It should_return_model_with_Name_equal_to_Sample_project = () => ProjectViewModel.Name.ShouldEqual("Sample project");
-        It should_return_model_with_StartDate_equal_to_current_date = () => ProjectViewModel.StartDate.ShouldEqual(startDate);
-        It should_return_model_with_null_EndDate = () => ProjectViewModel.EndDate.ShouldBeNull();
-        It should_return_model_with_owner_FullName_equal_to_FirstName_LastName = () => ProjectViewModel.OwnerFullName.ShouldEqual("FirstName LastName");
-        It should_return_model_with_one_participant = () => ProjectViewModel.Participants.Count().ShouldEqual(1);
-        It should_return_model_with_participant_FullName_equal_to_FirstName_LastName = () => ProjectViewModel.Participants.ShouldContain(x => x.FullName == "FirstName LastName");
+        Behaves_like<ProjectViewModel_returned_by_controller> project_view_result;
     }
 
     [Subject("As ProjectManager")]
@@ -125,6 +110,7 @@ namespace BaseMVC.MSpecTests.Controllers
 
         Establish context =() =>
         {
+            databaseCreator.ClearProjectsFromDatabase();
         };
 
         Because controller_invoke_add_method =() => actionResult = controller.Details(1);
@@ -137,33 +123,35 @@ namespace BaseMVC.MSpecTests.Controllers
     [Subject("As ProjectManager")]
     public class when_invoking_edit_for_existing_project : ControllerSpecsBase<ProjectController>
     {
-        private static ViewResult viewResult;
-        private static ProjectViewModel ProjectViewModel { get { return viewResult.Model as ProjectViewModel; } }
-        private static DateTime startDate = DateTime.Now;
-        private static User user;
-        private static Project project;
+        protected static ViewResult viewResult;
+        protected static User johnSmith;
+        protected static Project sampleProject;
 
         Establish context =() =>
         {
-            user = new User
-            {
-                FirstName = "FirstName",
-                LastName = "LastName",
-                LoginName = "LoginName",
-            };
-            project = Project.CreateProject("Sample project", startDate, null, user, new[] { user });
-            session.Save(project);
-            session.Flush();
+            johnSmith    = databaseCreator.JohnSmith;
+            sampleProject = databaseCreator.SampleProject;
         };
 
-        Because controller_invoke_add_method =() => viewResult = controller.Details(project.Id) as ViewResult;
+        Because controller_invoke_add_method =() => viewResult = controller.Details(sampleProject.Id) as ViewResult;
+
+        Behaves_like<ProjectViewModel_returned_by_controller> project_view_result;
+    }
+
+    [Behaviors]
+    public class ProjectViewModel_returned_by_controller
+    {
+        protected static ViewResult viewResult;
+        private static ProjectViewModel ProjectViewModel { get { return viewResult.Model as ProjectViewModel; } }
+        protected static User johnSmith;
+        protected static Project sampleProject;
 
         It should_return_non_empty_model =() => viewResult.Model.ShouldNotBeNull();
-        It should_return_model_with_Name_equal_to_Sample_project = () => ProjectViewModel.Name.ShouldEqual("Sample project");
-        It should_return_model_with_StartDate_equal_to_current_date = () => ProjectViewModel.StartDate.ShouldEqual(startDate);
+        It should_return_model_with_Name_equal_to_Sample_project = () => ProjectViewModel.Name.ShouldEqual(sampleProject.Name);
+        It should_return_model_with_StartDate_properly_set = () => ProjectViewModel.StartDate.ShouldEqual(sampleProject.StartDate);
         It should_return_model_with_null_EndDate = () => ProjectViewModel.EndDate.ShouldBeNull();
-        It should_return_model_with_owner_FullName_equal_to_FirstName_LastName = () => ProjectViewModel.OwnerFullName.ShouldEqual("FirstName LastName");
+        It should_return_model_with_John_Smith_as_a_owner = () => ProjectViewModel.OwnerFullName.ShouldEqual(johnSmith.GetFullName());
         It should_return_model_with_one_participant = () => ProjectViewModel.Participants.Count().ShouldEqual(1);
-        It should_return_model_with_participant_FullName_equal_to_FirstName_LastName = () => ProjectViewModel.Participants.ShouldContain(x => x.FullName == "FirstName LastName");
+        It should_return_model_with_John_Smith_as_a_participant = () => ProjectViewModel.Participants.ShouldContain(x => x.FullName == johnSmith.GetFullName());
     }
 }

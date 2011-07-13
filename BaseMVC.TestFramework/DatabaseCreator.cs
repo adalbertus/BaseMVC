@@ -13,6 +13,35 @@ namespace BaseMVC.TestFramework
     public class DatabaseCreator
     {
         public ISession Session { get; private set; }
+
+        public User JohnSmith {
+            get
+            {
+                if (Session == null)
+                {
+                    return null;
+                }
+
+                return Session.QueryOver<User>()
+                    .Where(x => x.LoginName == "john.smith")
+                    .SingleOrDefault();
+            }
+        }
+
+        public Project SampleProject
+        {
+            get
+            {
+                if (Session == null)
+                {
+                    return null;
+                }
+                return Session.QueryOver<Project>()
+                    .Where(x => x.Name == "Sample project")
+                    .SingleOrDefault();
+            }
+        }
+
         public DatabaseCreator(ISession session)
         {
             if (session == null)
@@ -49,6 +78,7 @@ namespace BaseMVC.TestFramework
         public void FillDatabase()
         {
             FillDatabaseWithUsers();
+            FillDatabaseWithProjects();
         }
 
         public void FillDatabaseWithUsers()
@@ -64,6 +94,27 @@ namespace BaseMVC.TestFramework
                     Description = "John the Smith",
                 });
 
+                tx.Commit();
+                Session.Flush();
+            }
+        }
+
+        public void FillDatabaseWithProjects()
+        {
+            var project = Project.CreateProject("Sample project", DateTime.Now.AddMonths(-6), null, JohnSmith, new[] { JohnSmith });
+            using (var tx = Session.BeginTransaction())
+            {
+                Session.Save(project);
+                tx.Commit();
+                Session.Flush();
+            }
+        }
+
+        public void ClearProjectsFromDatabase()
+        {
+            using (var tx = Session.BeginTransaction())
+            {
+                Session.Delete(SampleProject);
                 tx.Commit();
                 Session.Flush();
             }
