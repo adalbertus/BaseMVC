@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7ACE9363-854D-4F35-8CF9-18BC22152EDC}</ProjectGuid>
+    <ProjectGuid>{7F83FF58-E557-4CC7-A1ED-93DF3E1F2B39}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BaseMVC.Tests</RootNamespace>
-    <AssemblyName>BaseMVC.Tests</AssemblyName>
+    <RootNamespace>BaseMVC.TestFramework</RootNamespace>
+    <AssemblyName>BaseMVC.TestFramework</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,33 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=1.1.0.188, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL" />
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor">
       <HintPath>..\packages\Castle.Windsor.2.5.3\lib\NET40\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=3.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL" />
-    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.mocks, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="pnunit.framework, Version=1.0.4109.34242, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks">
-      <HintPath>..\packages\RhinoMocks.3.6\lib\Rhino.Mocks.dll</HintPath>
+    <Reference Include="NHibernate">
+      <HintPath>..\BaseMVC.Tests\bin\Debug\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -65,15 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoMapper\AutoMapperMock.cs" />
-    <Compile Include="AutoMapper\AutoMapperTest.cs" />
-    <Compile Include="Controllers\ControllerTestBase.cs" />
-    <Compile Include="Controllers\ProjectControllerTests.cs" />
-    <Compile Include="IoC\Installers\ControllersInstallerTests.cs" />
+    <Compile Include="DatabaseCreator.cs" />
+    <Compile Include="IoC\Facilities\PersistenceFacility.cs" />
+    <Compile Include="IoC\Installers\PersistenceInstaller.cs" />
+    <Compile Include="IoC\WindsorContainerInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BaseMVC.Domain\BaseMVC.Domain.csproj">
@@ -84,20 +64,11 @@
       <Project>{1C4E22C6-0336-4C92-874A-35B0B80B4882}</Project>
       <Name>BaseMVC.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BaseMVC.TestFramework\BaseMVC.TestFramework.csproj">
-      <Project>{7F83FF58-E557-4CC7-A1ED-93DF3E1F2B39}</Project>
-      <Name>BaseMVC.TestFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BaseMVC.ViewModels\BaseMVC.ViewModels.csproj">
-      <Project>{A9B4AE62-8789-4DAC-908E-C4C1C0896A21}</Project>
-      <Name>BaseMVC.ViewModels</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BaseMVC\BaseMVC.csproj">
       <Project>{0057BD6C-700E-47A9-B1B1-C740FBB3BA58}</Project>
       <Name>BaseMVC</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

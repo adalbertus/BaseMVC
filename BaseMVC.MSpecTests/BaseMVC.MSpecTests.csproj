@@ -65,10 +65,6 @@
   <ItemGroup>
     <Compile Include="Controllers\ControllerSpecsBase.cs" />
     <Compile Include="Controllers\ProjectControllerSpecs.cs" />
-    <Compile Include="Infrastructure\DatabaseFactory.cs" />
-    <Compile Include="IoC\Facilities\PersistenceFacility.cs" />
-    <Compile Include="IoC\Installers\PersistenceInstaller.cs" />
-    <Compile Include="IoC\WindsorContainerInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +75,10 @@
     <ProjectReference Include="..\BaseMVC.Infrastructure\BaseMVC.Infrastructure.csproj">
       <Project>{1C4E22C6-0336-4C92-874A-35B0B80B4882}</Project>
       <Name>BaseMVC.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BaseMVC.TestFramework\BaseMVC.TestFramework.csproj">
+      <Project>{7F83FF58-E557-4CC7-A1ED-93DF3E1F2B39}</Project>
+      <Name>BaseMVC.TestFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\BaseMVC.ViewModels\BaseMVC.ViewModels.csproj">
       <Project>{A9B4AE62-8789-4DAC-908E-C4C1C0896A21}</Project>

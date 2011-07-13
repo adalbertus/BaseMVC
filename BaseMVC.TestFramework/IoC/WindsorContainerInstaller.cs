@@ -5,7 +5,7 @@ using System.Text;
 using Castle.Windsor;
 using BaseMVC.IoC.Installers;
 
-namespace BaseMVC.MSpecTests.IoC
+namespace BaseMVC.TestFramework.IoC
 {
     public static class WindsorContainerInstaller
     {
@@ -14,7 +14,7 @@ namespace BaseMVC.MSpecTests.IoC
             var container = new WindsorContainer()
                     .Install(
                         new AutoMapperResolversInstaller(),
-                        new MSpecTests.IoC.Installers.PersistenceInstaller());
+                        new IoC.Installers.PersistenceInstaller());
 
             return container;
         }

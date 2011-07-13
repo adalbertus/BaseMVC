@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NHibernate;
-using BaseMVC.MSpecTests.IoC;
-using BaseMVC.MSpecTests.Infrastructure;
 using Machine.Specifications;
 using BaseMVC.Controllers;
+using BaseMVC.TestFramework.IoC;
+using BaseMVC.TestFramework;
 
 namespace BaseMVC.MSpecTests.Controllers
 {
@@ -14,19 +14,22 @@ namespace BaseMVC.MSpecTests.Controllers
     {
         protected static ISession session;
         protected static TController controller;
+        protected static DatabaseCreator databaseCreator;
 
         Establish context =() =>
         {
             var container = WindsorContainerInstaller.Install();
+            
             session = container.Resolve<ISession>();
-            DatabaseFactory.FillDatabase(session);
+            databaseCreator = new DatabaseCreator(session);
+            databaseCreator.FillDatabase();
             BaseMVC.AutoMapper.AutoMapper.Configure(container);
             controller = Activator.CreateInstance(typeof(TController), session) as TController;
         };
 
         Cleanup establishedContext =() =>
         {
-            DatabaseFactory.Close(session);
+            DatabaseCreator.Close(session);
         };
 
     }

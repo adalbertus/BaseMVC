@@ -8,10 +8,23 @@ using NHibernate.Tool.hbm2ddl;
 using NHibernate.Cfg;
 using BaseMVC.Domain;
 
-namespace BaseMVC.Tests.Infrastructure
+namespace BaseMVC.TestFramework
 {
-    public static class DatabaseFactory
+    public class DatabaseCreator
     {
+        public ISession Session { get; private set; }
+        public DatabaseCreator(ISession session)
+        {
+            if (session == null)
+            {
+                Session = OpenSession();
+            }
+            else
+            {
+                Session = session;
+            }
+        }
+
         public static ISession OpenSession()
         {
             var configuration = ConfigurationBuilder.Build(false, true);
@@ -33,21 +46,26 @@ namespace BaseMVC.Tests.Infrastructure
             }
         }
 
-        public static void FillDatabase(ISession session)
+        public void FillDatabase()
         {
-            using (var tx = session.BeginTransaction())
-            {
-                session.Save(new User
+            FillDatabaseWithUsers();
+        }
+
+        public void FillDatabaseWithUsers()
+        {
+            using (var tx = Session.BeginTransaction())
+            {                
+                Session.Save(new User
                 {
-                    FirstName = "Jan",
-                    LastName = "Kowalski",
-                    LoginName = "jan.kowaslki",
-                    Password = "haslo",
-                    Description = "Jan Kowalski",
+                    FirstName = "John",
+                    LastName = "Smith",
+                    LoginName = "john.smith",
+                    Password = "secret",
+                    Description = "John the Smith",
                 });
 
                 tx.Commit();
-                session.Flush();
+                Session.Flush();
             }
         }
 

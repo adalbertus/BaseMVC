@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using BaseMVC.Tests.Infrastructure;
 using NHibernate;
 using BaseMVC.Controllers;
 using BaseMVC.ViewModels.Project;
@@ -32,12 +31,6 @@ namespace BaseMVC.Tests.Controllers
             AddActionResult = projectController.Add(_viewModel);
         }
         
-        [TestFixtureTearDown]
-        public void TearDownContext()
-        {
-            DatabaseFactory.Close(Session);
-        }
-
         [Test]
         public void ShouldNewProjectBeWrittenInDatabase()
         {

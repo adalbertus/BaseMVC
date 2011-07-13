@@ -6,18 +6,16 @@ using Castle.MicroKernel.Facilities;
 using BaseMVC.Infrastructure;
 using NHibernate;
 using Castle.MicroKernel.Registration;
-using BaseMVC.Tests.Infrastructure;
 
-namespace BaseMVC.Tests.IoC.Facilities
+namespace BaseMVC.TestFramework.IoC.Facilities
 {
     public class PersistenceFacility : AbstractFacility
     {
         protected override void Init()
         {
-            //var session = DatabaseFactory.OpenSession();
             Kernel.Register(
                 Component.For<ISession>()
-                    .UsingFactoryMethod(k => DatabaseFactory.OpenSession())
+                    .UsingFactoryMethod(k => DatabaseCreator.OpenSession())
                     .LifeStyle.PerThread);
 
         }

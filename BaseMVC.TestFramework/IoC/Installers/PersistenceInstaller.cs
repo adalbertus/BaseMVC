@@ -5,9 +5,9 @@ using System.Text;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.MicroKernel.SubSystems.Configuration;
-using BaseMVC.MSpecTests.IoC.Facilities;
+using BaseMVC.TestFramework.IoC.Facilities;
 
-namespace BaseMVC.MSpecTests.IoC.Installers
+namespace BaseMVC.TestFramework.IoC.Installers
 {
     public class PersistenceInstaller : IWindsorInstaller
     {

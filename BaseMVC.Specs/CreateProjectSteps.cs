@@ -101,7 +101,7 @@ namespace BaseMVC.Specs
         public void ThenIWillBeRedirectedToProjectListPage()
         {
             var redirectResult = (_newProjectPage as RedirectToRouteResult);
-            Assert.That(redirectResult.RouteValues["action"], Is.EqualTo("Search"));
+            Assert.That(redirectResult.RouteValues["action"], Is.EqualTo("Index"));
         }
 
         [When(@"I press Save button")]
