@@ -8,7 +8,7 @@
 
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>ProjectDetails</legend>
+        <legend>@Model.Name</legend>
         <div class="editor-label">
             @Html.LabelFor(model => model.Name)
         </div>
@@ -52,7 +52,7 @@
             @Html.ValidationMessageFor(model => model.SelectedParticipants)
         </div>
         <p>
-            <input type="submit" value="Create" />
+            <input type="submit" value="@ViewBag.SubmitTitle" />
         </p>
     </fieldset>
 }

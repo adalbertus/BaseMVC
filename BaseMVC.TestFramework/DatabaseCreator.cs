@@ -22,9 +22,20 @@ namespace BaseMVC.TestFramework
                     return null;
                 }
 
-                return Session.QueryOver<User>()
-                    .Where(x => x.LoginName == "john.smith")
-                    .SingleOrDefault();
+                return GetUserByLoginName("john.smith");
+            }
+        }
+
+        public User MarkTwain
+        {
+            get
+            {
+                if (Session == null)
+                {
+                    return null;
+                }
+
+                return GetUserByLoginName("mark.twain");
             }
         }
 
@@ -94,6 +105,15 @@ namespace BaseMVC.TestFramework
                     Description = "John the Smith",
                 });
 
+                Session.Save(new User
+                {
+                    FirstName = "Mark",
+                    LastName = "Twain",
+                    LoginName = "mark.twain",
+                    Password = "niawt",
+                    Description = "Writer",
+                });
+
                 tx.Commit();
                 Session.Flush();
             }
@@ -105,7 +125,7 @@ namespace BaseMVC.TestFramework
             using (var tx = Session.BeginTransaction())
             {
                 Session.Save(project);
-                tx.Commit();
+                tx.Commit();                
                 Session.Flush();
             }
         }
@@ -124,6 +144,13 @@ namespace BaseMVC.TestFramework
         {
             SchemaExport export = new SchemaExport(configuration);
             export.Execute(false, true, false, session.Connection, null);
+        }
+
+        private User GetUserByLoginName(string loginName)
+        {
+            return Session.QueryOver<User>()
+                .Where(x => x.LoginName == loginName)
+                .SingleOrDefault();
         }
     }
 }

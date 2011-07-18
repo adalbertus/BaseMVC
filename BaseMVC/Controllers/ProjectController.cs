@@ -111,19 +111,50 @@ namespace BaseMVC.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            throw new NotImplementedException();
+            var projectModel = Session.Get<Project>(id);
+            if (projectModel == null)
+            {
+                return HttpNotFound("Project not found");
+            }
+            var projectViewModel = projectModel.Map<ProjectInputViewModel>();
+            return View(projectViewModel);
         }
 
         [HttpPost]
         public ActionResult Edit(ProjectInputViewModel projectInput)
         {
-            throw new NotImplementedException();
+            projectInput = CreateUpdateProjectInput(projectInput);
+
+            if (ModelState.IsValid)
+            {
+                using (var tx = Session.BeginTransaction())
+                {
+                    var projectModel = projectInput.Map<Project>();
+                    Session.Update(projectModel);
+                    tx.Commit();
+                    Session.Flush();
+                }
+                return RedirectToAction("Index");
+            }
+
+            return View(projectInput);
         }
 
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            throw new NotImplementedException();
+            var projectModel = Session.Get<Project>(id);
+            if (projectModel == null)
+            {
+                return HttpNotFound("Project not found");
+            }
+            using (var tx = Session.BeginTransaction())
+            {
+                Session.Delete(projectModel);
+                tx.Commit();
+                Session.Flush();
+            }
+            return RedirectToAction("Index");
         }
 
         private ProjectInputViewModel CreateUpdateProjectInput(ProjectInputViewModel newProject = null)

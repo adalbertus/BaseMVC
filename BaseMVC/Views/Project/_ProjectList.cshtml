@@ -29,6 +29,8 @@
     {
         <tr>
             <td>
+            @Html.ActionLink("Add new task", "Add", new { controller = "Task", projectId = item.Id })
+            |
             @if (item.TasksCount > 0)
             {
                 @Html.ActionLink("Show tasks", "ShowForProject", new { controller = "Task", id = item.Id });
@@ -37,20 +39,12 @@
                 <text>Show tasks</text>
             }
             |
-            @Html.ActionLink("Add new task", "Add", new { controller = "Task", projectId = item.Id })
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+            |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
             <td>
                 @Html.ActionLink(item.Name, "Details", new { id = item.Id })
-                (
-                @if (item.TasksCount == 0)
-                {
-                    <text>no tasks defined</text>
-                }
-                else
-                {
-                    @Html.ActionLink("Show tasks", "ShowForProject", new { controller = "Task", id = item.Id });
-                }
-                )
             </td>
             <td>
                 @item.OwnerFirstName @item.OwnerLastName

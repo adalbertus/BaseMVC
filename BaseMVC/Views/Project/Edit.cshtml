@@ -1,0 +1,12 @@
+﻿@model BaseMVC.ViewModels.Project.ProjectInputViewModel
+@{
+    ViewBag.Title = "New Project";
+    ViewBag.SubmitTitle = "Update";
+}
+<h2>Edit @Model.Name</h2>
+
+@Html.Partial("_AddEdit")
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

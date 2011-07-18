@@ -29,6 +29,11 @@ namespace BaseMVC.AutoMapper
             
             Mapper.CreateMap<Project, ProjectListItemViewModel>();
             Mapper.CreateMap<Project, ProjectViewModel>();
+            Mapper.CreateMap<Project, ProjectInputViewModel>()
+                .ForMember(m => m.SelectedOwnerId, o => o.MapFrom(x => x.Owner.Id))
+                .ForMember(m => m.SelectedParticipants, o => o.MapFrom(x => x.Participants.Select(p => p.Id)))
+                .ForMember(m => m.AvaiableOwners, opt => opt.ResolveUsing<AvaiableProductOwnersResolver>())
+                .ForMember(m => m.AvaiableParticipants, opt => opt.ResolveUsing<AvaiableProductOwnersResolver>());
 
             Mapper.CreateMap<ProjectInputViewModel, Project>()
                 .ForMember(m => m.Owner, o => o.ResolveUsing<LoadingEntityResolver<User>>().FromMember(x => x.SelectedOwnerId))
